@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     public float jumpForce = 5f;
     float horizontalValue;
     float verticalValue;
+    bool isRunning = false;
 
     void Awake()
     {
@@ -26,6 +27,14 @@ public class Player : MonoBehaviour
     {
         horizontalValue = Input.GetAxisRaw("Horizontal");
         verticalValue = Input.GetAxisRaw("Vertical");
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isRunning = true;
+        }
+        else
+        {
+            isRunning = false;
+        }
     }
 
     void FixedUpdate()
@@ -35,11 +44,18 @@ public class Player : MonoBehaviour
 
     void Move(float direction)
     {
-        rb.velocity = new Vector2(direction * speed * 40 * Time.deltaTime, rb.velocity.y);
+        float movement = direction * speed * 40 * Time.deltaTime;
+        if (isRunning)
+        {
+            movement *= 2;
+        }
+        rb.velocity = new Vector2(movement, rb.velocity.y);
     }
 
     void Jump()
     {
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
     }
+    // q: how to implement running mechanic?
+    // a: add a bool to check if the player is running, and if so, multiply the speed by 2
 }
