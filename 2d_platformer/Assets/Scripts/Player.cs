@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Player : MonoBehaviour
 {
     Rigidbody2D rb;
@@ -10,16 +11,19 @@ public class Player : MonoBehaviour
     float horizontalValue;
     float verticalValue;
     bool isRunning = false;
+    public GroundCheck groundCheck;
+    public CapsuleCollider2D capsuleCollider;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        capsuleCollider = GetComponent<CapsuleCollider2D>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -40,6 +44,7 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         Move(horizontalValue);
+        Jump();
     }
 
     void Move(float direction)
@@ -54,8 +59,9 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        if (verticalValue > 0 && groundCheck.isGrounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce * 40 * Time.deltaTime);
+        }
     }
-    // q: how to implement running mechanic?
-    // a: add a bool to check if the player is running, and if so, multiply the speed by 2
 }
