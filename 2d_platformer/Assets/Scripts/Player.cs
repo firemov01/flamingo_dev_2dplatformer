@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public float jumpForce = 5f;
     float horizontalValue;
     float verticalValue;
+    bool isRunning = false;
     public GroundCheck groundCheck;
     public CapsuleCollider2D capsuleCollider;
 
@@ -30,6 +31,14 @@ public class Player : MonoBehaviour
     {
         horizontalValue = Input.GetAxisRaw("Horizontal");
         verticalValue = Input.GetAxisRaw("Vertical");
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isRunning = true;
+        }
+        else
+        {
+            isRunning = false;
+        }
     }
 
     void FixedUpdate()
@@ -40,14 +49,16 @@ public class Player : MonoBehaviour
 
     void Move(float direction)
     {
-        rb.velocity = new Vector2(direction * speed * 40 * Time.deltaTime, rb.velocity.y);
+        float movement = direction * speed * 40 * Time.deltaTime;
+        if (isRunning)
+        {
+            movement *= 2;
+        }
+        rb.velocity = new Vector2(movement, rb.velocity.y);
     }
 
     void Jump()
     {
-        if (verticalValue > 0 && groundCheck.isGrounded)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce * 40 * Time.deltaTime);
-        }
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
     }
 }
