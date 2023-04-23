@@ -59,6 +59,9 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        if (verticalValue > 0 && groundCheck.isGrounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce * 40 * Time.deltaTime);
+        }
     }
 }
