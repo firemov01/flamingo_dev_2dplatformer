@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 
@@ -10,12 +11,14 @@ public class Player : MonoBehaviour
     float verticalValue;
     bool isRunning = false;
     public GroundCheck groundCheck;
-    public CapsuleCollider2D capsuleCollider;
+    bool facinggRight = false;
+    public float runningMultiplier = 1.5f;
+    Animator animator;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        capsuleCollider = GetComponent<CapsuleCollider2D>();
+        animator = GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
@@ -50,9 +53,26 @@ public class Player : MonoBehaviour
         float movement = direction * speed * 40 * Time.deltaTime;
         if (isRunning)
         {
-            movement *= 2;
+            movement *= runningMultiplier;
         }
         rb.velocity = new Vector2(movement, rb.velocity.y);
+        if (movement > 0 && !facinggRight)
+        {
+            Flip();
+        }
+        else if (movement < 0 && facinggRight)
+        {
+            Flip();
+        }
+        animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
+    }
+
+    private void Flip()
+    {
+        facinggRight = !facinggRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
 
     void Jump()
